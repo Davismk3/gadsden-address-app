@@ -30,5 +30,6 @@ def index():
 
 # Run the app
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 10000))
+    print(f"✅ Running on 0.0.0.0:{port}")
     app.run(host="0.0.0.0", port=port)
