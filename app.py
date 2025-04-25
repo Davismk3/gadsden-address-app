@@ -7,7 +7,7 @@ from rapidfuzz import fuzz, process
 app = Flask(__name__)
 
 # Load and preprocess addresses
-df = pd.read_csv("/Users/michaeldavis/Desktop/Gadsden_AI/gadsden_data_custom_words.csv")
+df = pd.read_csv("gadsden_data_custom_words.csv")
 df["phonetic"] = df["address"].apply(lambda x: doublemetaphone(str(x))[0])
 
 # Matching function
