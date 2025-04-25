@@ -1,24 +1,34 @@
 from flask import Flask, request, render_template
 import pandas as pd
 from metaphone import doublemetaphone
-from rapidfuzz import fuzz, process
+from rapidfuzz import fuzz
 import os
 
-# Set up Flask
 app = Flask(__name__)
 
-# Load and preprocess addresses
-df = pd.read_csv("roads.csv")
-df["phonetic"] = df["address"].apply(lambda x: doublemetaphone(str(x))[0])
+# 🔁 Full-word phonetic encoding
+def get_full_phonetic(text):
+    words = str(text).lower().split()
+    codes = [doublemetaphone(w)[0] for w in words]
+    return " ".join(codes)
 
-# Matching function
+# Load and preprocess
+df = pd.read_csv("roads.csv")
+df["phonetic"] = df["address"].apply(get_full_phonetic)
+
+# 🔍 Improved matcher
 def get_matches(guess):
-    guess_phonetic = doublemetaphone(guess)[0]
-    matches = process.extract(guess_phonetic, df["phonetic"], limit=10, scorer=fuzz.ratio)
-    top_matches = [df.iloc[i[2]]["address"] for i in matches]
+    guess = guess.lower()
+    guess_phonetic = get_full_phonetic(guess)
+
+    df["text_score"] = df["address"].apply(lambda x: fuzz.ratio(guess, x.lower()))
+    df["phonetic_score"] = df["phonetic"].apply(lambda x: fuzz.ratio(guess_phonetic, x))
+    df["combined_score"] = 0.5 * df["text_score"] + 0.5 * df["phonetic_score"]
+
+    top_matches = df.sort_values("combined_score", ascending=False).head(20)["address"].tolist()
     return top_matches
 
-# Routes
+# Route
 @app.route("/", methods=["GET", "POST"])
 def index():
     matches = []
@@ -28,7 +38,6 @@ def index():
         matches = get_matches(guess)
     return render_template("index.html", guess=guess, matches=matches)
 
-# Run the app
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     print(f"✅ Running on 0.0.0.0:{port}")
