@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: gadsden-app
+    name: gadsden-address-app
     runtime: python
-    buildCommand: cd gadsden-app && pip install -r requirements.txt
-    startCommand: cd gadsden-app && python app.py
+    buildCommand: ""
+    startCommand: python app.py
     envVars:
       - key: FLASK_ENV
         value: production
