@@ -21,10 +21,9 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             max-width: 600px;
         }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
+        p {
+            font-size: 16px;
+            margin-bottom: 10px;
             color: #555;
         }
         input[type=text] {
@@ -62,22 +61,21 @@
 <body>
     <h1>Gadsden Address Finder</h1>
     <form method="POST">
-        <large>What road did you hear from dispatch?</large>
-        <br><br>
+        <p>What road did you think you heard from dispatch?</p>
 
-        <large>Examples:</large>
+        <p>Examples:</p>
         <ul>
             <li>Heard "Ayenen Road"? Correct road is <strong>A & N Road</strong>.</li>
             <li>Heard "Hanson Circle"? Correct road is <strong>Hinson Circle</strong>.</li>
         </ul>
 
-        <h2>Guessed Road:</h2>
+        <h2>Misheard Road:</h2>
         <input type="text" name="guess" value="{{ guess }}" placeholder="e.g. Maple Street">
         <input type="submit" value="Match">
     </form>
 
     {% if matches %}
-        <h2>Possible Matches:</h2>
+        <h2>Possible Matches (Actual Gadsden Roads):</h2>
         <ul>
         {% for match in matches %}
             <li>{{ match }}</li>
