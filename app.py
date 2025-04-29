@@ -18,7 +18,7 @@ df["phonetic"] = df["address"].apply(get_full_phonetic)  # converts all in addre
 
 # Improved matcher
 def get_matches(guess):
-    guess_phonetic = get_full_phonetic(guess)  # phonetic code for input 
+    guess_phonetic = get_full_phonetic(guess).lower()  # phonetic code for input 
 
     df["text_score"] = df["address"].apply(lambda x: fuzz.ratio(guess, x.lower()))  # save spelling score in new column
     df["phonetic_score"] = df["phonetic"].apply(lambda x: fuzz.ratio(guess_phonetic, x))  # save phonetic score in new column
