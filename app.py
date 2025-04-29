@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Full-word phonetic encoding
 def get_full_phonetic(text):  # converts a string into phonetic codes 
-    words = str(text).lower().split()  # converts a string to lowercase, then splits into words 
+    words = str(text).lower()  # converts a string to lowercase, then splits into words 
     codes = [doublemetaphone(w)[0] for w in words]  # converts words into phonetic codes 
     return " ".join(codes)  # joins phonetic codes 
 
@@ -22,7 +22,7 @@ def get_matches(guess):
 
     df["text_score"] = df["address"].apply(lambda x: fuzz.ratio(guess, x.lower()))  # save spelling score in new column
     df["phonetic_score"] = df["phonetic"].apply(lambda x: fuzz.ratio(guess_phonetic, x))  # save phonetic score in new column
-    df["combined_score"] = 0.4 * df["text_score"] + 0.6 * df["phonetic_score"]  # combine spelling and phonetic score
+    df["combined_score"] = 0.5 * df["text_score"] + 0.5 * df["phonetic_score"]  # combine spelling and phonetic score
     
     """
     For example, the new data file will look like this:
